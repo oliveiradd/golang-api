@@ -2,11 +2,11 @@ package main
 
 import (
     "database/sql"
-    "encoding/json"
-    "fmt"
+//    "encoding/json"
+//    "fmt"
     "log"
-    "net/http"
-    "strconv"
+//    "net/http"
+//    "strconv"
 
 
     _ "github.com/go-sql-driver/mysql"
@@ -24,7 +24,7 @@ func initDB() {
 	db.SetMaxOpenConns(10)
 }
 
-func getItems(w http.ResponseWriter, r *http.Request) {
+func getItems() []Item {
     
 	rows, err := db.Query("SELECT * FROM golang_api")
     if err != nil {
@@ -41,28 +41,10 @@ func getItems(w http.ResponseWriter, r *http.Request) {
         items = append(items, item)
     }
 
-    jsonData, err := json.Marshal(items)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
-
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    w.Write(jsonData)
+    return items
 }
 
-func getItemById(w http.ResponseWriter, r *http.Request) {
-
-	queryValues := r.URL.Query()
-    id_str := queryValues.Get("id")
-
-    // Convert the id parameter to an integer
-    id, err := strconv.Atoi(id_str)
-    if err != nil {
-        http.Error(w, "Invalid id parameter", http.StatusBadRequest)
-        return
-    }
+func getItemById(id int) []Item {
 
     rows, err := db.Query("SELECT * FROM golang_api WHERE ID=? LIMIT 1",id)
     if err != nil {
@@ -79,26 +61,15 @@ func getItemById(w http.ResponseWriter, r *http.Request) {
         items = append(items, item)
     }
 
-    jsonData, err := json.Marshal(items)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
-
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    w.Write(jsonData)
+    return items
 }
 
-func createItem(w http.ResponseWriter, r *http.Request) {
-
-    var item Item
-    json.NewDecoder(r.Body).Decode(&item)
+func createItem(item Item) bool {
 
     _, err := db.Exec("INSERT INTO golang_api (id,nome,descricao,preco) VALUES (?,?,?,?)", item.ID, item.Nome, item.Descricao, item.Preco)
     if err != nil {
         log.Fatal(err)
+        return false
     }
-    w.WriteHeader(http.StatusCreated)
-    fmt.Fprintf(w, "Item successfully created")
+    return true
 }
