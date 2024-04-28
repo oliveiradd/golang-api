@@ -21,6 +21,18 @@ type Item struct {
     Preco     float64 `json:"preco"`
 }
 
+type User struct {
+    LoginCredentials
+    Name    string `json:"name"`
+    CreatedAt   string
+    LastLogin   string
+}
+
+type LoginCredentials struct {
+    Email   string  `json:"email"`
+    PWHash  string  `json:"pwhash"`
+}
+
 func main() {
 	initDB()
 	defer db.Close()
