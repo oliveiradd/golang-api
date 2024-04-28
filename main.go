@@ -27,10 +27,10 @@ func main() {
 
 	// initialize router
 	router := mux.NewRouter()
-    router.HandleFunc("/items", retrieveItems).Methods("GET")
-    router.HandleFunc("/items", receiveItem).Methods("POST")
-    router.HandleFunc("/item", retrieveItemById).Methods("GET")
-    router.HandleFunc("/item", updateItem).Methods("POST")
+    router.HandleFunc("/items", getItems).Methods("GET")
+    router.HandleFunc("/items", createItem).Methods("POST")
+    router.HandleFunc("/items", deleteItem).Methods("DELETE")
+    router.HandleFunc("/items", updateItem).Methods("UPDATE")
     
 	// start http server
 	fmt.Println("Server listening on port 8080")

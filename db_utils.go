@@ -24,7 +24,7 @@ func initDB() {
 	db.SetMaxOpenConns(10)
 }
 
-func getItems() []Item {
+func getAllItems() []Item {
     
 	rows, err := db.Query("SELECT * FROM golang_api")
     if err != nil {
@@ -64,7 +64,7 @@ func getItemById(id int) []Item {
     return items
 }
 
-func createItem(item Item) bool {
+func createItem_db(item Item) bool {
 
     _, err := db.Exec("INSERT INTO golang_api (id,nome,descricao,preco) VALUES (?,?,?,?)", item.ID, item.Nome, item.Descricao, item.Preco)
     if err != nil {
@@ -74,9 +74,19 @@ func createItem(item Item) bool {
     return true
 }
 
-func deleteItem(id int) bool {
+func deleteItem_db(id int) bool {
 
     _, err := db.Exec("DELETE FROM golang_api WHERE id=?",id)
+    if err != nil {
+        log.Fatal(err)
+        return false
+    }
+    return true
+}
+
+func updateItem_db(item Item) bool {
+      
+    _, err :=db.Exec("UPDATE golang_api SET nome=?,descricao=?,preco=? WHERE id=?",item.Nome,item.Descricao,item.Preco,item.ID)
     if err != nil {
         log.Fatal(err)
         return false
