@@ -73,3 +73,13 @@ func createItem(item Item) bool {
     }
     return true
 }
+
+func deleteItem(id int) bool {
+
+    _, err := db.Exec("DELETE FROM golang_api WHERE id=?",id)
+    if err != nil {
+        log.Fatal(err)
+        return false
+    }
+    return true
+}

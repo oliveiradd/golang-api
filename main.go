@@ -30,6 +30,7 @@ func main() {
     router.HandleFunc("/items", retrieveItems).Methods("GET")
     router.HandleFunc("/items", receiveItem).Methods("POST")
     router.HandleFunc("/item", retrieveItemById).Methods("GET")
+    router.HandleFunc("/item", updateItem).Methods("POST")
     
 	// start http server
 	fmt.Println("Server listening on port 8080")

@@ -66,3 +66,31 @@ func receiveItem(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w,"Failed to create item on database")
 	}
 }
+
+func updateItem(w http.ResponseWriter, r *http.Request) {
+
+	queryValues := r.URL.Query()
+    action := queryValues.Get("action")
+
+	var item Item
+	json.NewDecoder(r.Body).Decode(&item)
+
+	switch action {
+	case "delete", "del":
+		
+		if item.ID == 0 {
+			fmt.Fprintf(w,"Invalid item id")
+			return
+		}
+	
+		if deleteItem(item.ID) {
+			fmt.Fprintf(w,"Item successfully deleted")
+		} else {
+			fmt.Fprintf(w,"Failed to delete item from database")
+		}
+	case "update", "upd":
+		fmt.Fprintf(w,"missing update function")
+	default:
+		fmt.Fprintf(w,"Action not recognized")
+	}
+}
