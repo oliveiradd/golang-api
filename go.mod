@@ -1,4 +1,4 @@
-module golang-api2
+module golang-api
 
 go 1.21.9
 
